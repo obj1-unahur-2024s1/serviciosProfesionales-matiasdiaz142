@@ -1,0 +1,54 @@
+import profesionales.*
+import universidades.*
+import empresas.*
+
+describe "Test de Profesionales"{
+	//Universidades
+	const sanMartin = new Universidad(provincia = "Buenos Aires", honorariosPorHora = 3500)
+	const rosario = new Universidad(provincia = "Santa Fe", honorariosPorHora = 2800)
+	const corrientes = new Universidad(provincia = "Corrientes", honorariosPorHora = 4200)
+	const hurlingham = new Universidad(provincia = "Buenos Aires", honorariosPorHora = 8800)
+	
+	//Profesionales
+	const juana = new ProfesionalVinculado(universidad = rosario)
+	const melina = new ProfesionalAsociado(universidad = corrientes)
+	const rocio = new ProfesionalLibre(universidad = hurlingham, honorariosPorHora = 5000, provinciasDondePuedeTrabajar = #{"Santa Fe","Cordoba","Buenos Aires"})
+	const luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, provinciasDondePuedeTrabajar = #{"Santa Fe","Entre Rios"})
+	
+	//Empresa de servicios
+	const empresa = new EmpresaDeServicios(honorarioReferencia = 3500)
+	
+	//Hacer que la Empresa contrate a los profesionales
+	method initialize(){
+		empresa.contratarProfesional(juana)
+		empresa.contratarProfesional(melina)
+		empresa.contratarProfesional(rocio)
+		empresa.contratarProfesional(luciana)
+	}
+
+	test "2 de sus profesionales estudiaron en Rosario"{
+		assert.equals(2,empresa.profesionalesQueEstudiaronEn(rosario))
+	}
+	test "1 de sus profesionales estudiaron en Hurlingham"{
+		assert.equals(1,empresa.profesionalesQueEstudiaronEn(hurlingham))
+	}
+	test "0 de sus profesionales estudiaron en San Martin"{
+		assert.equals(0,empresa.profesionalesQueEstudiaronEn(sanMartin))
+	}
+	
+	test "Rocio solamente como profesionales caros"{
+		assert.equals([rocio],empresa.profesionalesCaros())
+	}
+	
+	test "Universidades formadoras a Rosario, Corrientes y Hurlingham"{
+		assert.equals(#{rosario,corrientes,hurlingham}, empresa.universidadesFormadoras())
+	}
+	
+	test "Juana como profesional mas barato"{
+		assert.equals(juana,empresa.profesionalMasBarato())
+	}
+	
+	test "Es de gente acotada la empresa"{
+		assert.that(empresa.esDeGenteAcotada())
+	}
+}
